@@ -14,16 +14,18 @@
 #include <math.h>
 
 /* Estrutura de uma célula da tabela Hash */
-typedef struct cell_t{
+typedef struct cell_t
+{
     int key;
     char state;
-}cell_t;
+} cell_t;
 
 /* Estrutura de uma tabela Hash */
-typedef struct hashTable_t{
+typedef struct hashTable_t
+{
     cell_t **table;
-    int size; 
-}HASH_TABLE;
+    int size;
+} HASH_TABLE;
 
 /* Função hash (1) */
 int hash_1(int key, int tableSize);

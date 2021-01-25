@@ -7,20 +7,6 @@
 
 #include "table.h"
 
-void initTable(HASH_TABLE *ht, int tableSize)
-{
-    ht->size = tableSize;
-    ht->table = (cell_t **)malloc(sizeof(cell_t) * ht->size);
-    if(!ht->table)
-    {
-        perror("Not enough memory to create a hash table! - 'initTable()'");
-        exit(1);
-    }
-
-    while(tableSize--)
-       ht->table[tableSize] = NULL;
-} 
-
 int hash_1(int key, int tableSize)
 {
     return key % tableSize;
@@ -28,5 +14,19 @@ int hash_1(int key, int tableSize)
 
 int hash_2(int key, int tableSize)
 {
-    return (int) floor(tableSize * (key * 0.9 - floor(key * 0.9)));
+    return (int)floor(tableSize * (key * 0.9 - floor(key * 0.9)));
+}
+
+void initTable(HASH_TABLE *ht, int tableSize)
+{
+    ht->size = tableSize;
+    ht->table = (cell_t **)malloc(sizeof(cell_t) * ht->size);
+    if (!ht->table)
+    {
+        perror("Not enough memory to create a hash table! - 'initTable()'");
+        exit(1);
+    }
+
+    while (tableSize--)
+        ht->table[tableSize] = NULL;
 }
