@@ -31,7 +31,7 @@ int main()
             rootAVL = removeNodeAVL(rootAVL, keyInput);
         }
         else
-            fprintf(stdout, "Error: Invalid operation - 'opInput'");
+            fprintf(stdout, "Error: Invalid operation - 'opInput'\n");
     }
 
     /* Output esperado */
@@ -39,6 +39,8 @@ int main()
 
     /* Destruição das duas tabelas Hash */
     destroyCuckooHash(&cuckooHash);
+    rootAVL = destroyAVL(rootAVL);
+    
     return 0;
 }
 
