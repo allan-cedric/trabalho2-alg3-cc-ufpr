@@ -1,6 +1,9 @@
 #include "CuckooHash/table.h"
 #include "ArvoreAVL/avl.h"
 
+/* Função para alocar os elementos de uma tabela Hash em uma árvore AVL */
+void hashTableToAVL(index_t *table, int sizeTable, AVL **rootAVL);
+
 /* Função para imprimir as duas tabelas Hash em ordem */
 void printCuckooHashTables(CUCKOO_HASH *ch, AVL *rootAVL);
 
@@ -28,19 +31,17 @@ int main()
                 fgetc(stdin);
         }
         else if (opInput == 'i')
-        {
             insertCuckooHash(&cuckooHash, keyInput);
-            rootAVL = insertNodeAVL(rootAVL, keyInput);
-        }
         else if (opInput == 'r')
-        {
             removeCuckooHash(&cuckooHash, keyInput);
-            rootAVL = removeNodeAVL(rootAVL, keyInput);
-        }
 
         ret = fscanf(stdin, "%c %i", &opInput, &keyInput);
         fgetc(stdin);
     }
+
+    /* Realização de um parsing nas tabelas Hash, a fim de imprimí-las a partir de uma árvore AVL */
+    hashTableToAVL(cuckooHash.table_1, cuckooHash.size_1, &rootAVL);
+    hashTableToAVL(cuckooHash.table_2, cuckooHash.size_2, &rootAVL);
 
     /* Output esperado */
     printCuckooHashTables(&cuckooHash, rootAVL);
@@ -49,6 +50,18 @@ int main()
     destroyCuckooHash(&cuckooHash);
     rootAVL = destroyAVL(rootAVL);
     return 0;
+}
+
+void hashTableToAVL(index_t *table, int sizeTable, AVL **rootAVL)
+{
+    data_t *data;
+    int i;
+    for (i = 0; i < sizeTable; i++)
+    {
+        data = table[i].data;
+        if (data)
+            *rootAVL = insertNodeAVL(*rootAVL, data->key);
+    }
 }
 
 void printCuckooHashTables(CUCKOO_HASH *ch, AVL *rootAVL)
