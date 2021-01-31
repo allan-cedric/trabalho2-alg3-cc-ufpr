@@ -16,11 +16,18 @@ int main()
 
     /* Inputs nas tabelas Hash */
     char opInput;
-    int keyInput;
-    while (!feof(stdin))
+    int keyInput, ret;
+    ret = fscanf(stdin, "%c %i", &opInput, &keyInput);
+    fgetc(stdin);
+    while (ret != EOF)
     {
-        fscanf(stdin, "%c %i\n", &opInput, &keyInput);
-        if (opInput == 'i')
+        if (ret < 2 || (opInput != 'i' && opInput != 'r'))
+        {
+            perror("Error: Invalid input");
+            for (int i = 0; i < 2 - ret; i++)
+                fgetc(stdin);
+        }
+        else if (opInput == 'i')
         {
             insertCuckooHash(&cuckooHash, keyInput);
             rootAVL = insertNodeAVL(rootAVL, keyInput);
@@ -30,8 +37,9 @@ int main()
             removeCuckooHash(&cuckooHash, keyInput);
             rootAVL = removeNodeAVL(rootAVL, keyInput);
         }
-        else
-            fprintf(stdout, "Error: Invalid operation - 'opInput'\n");
+
+        ret = fscanf(stdin, "%c %i", &opInput, &keyInput);
+        fgetc(stdin);
     }
 
     /* Output esperado */
@@ -40,7 +48,6 @@ int main()
     /* Destruição das duas tabelas Hash */
     destroyCuckooHash(&cuckooHash);
     rootAVL = destroyAVL(rootAVL);
-    
     return 0;
 }
 
@@ -50,7 +57,7 @@ void printCuckooHashTables(CUCKOO_HASH *ch, AVL *rootAVL)
     {
         printCuckooHashTables(ch, rootAVL->left);
         index_t *dataToPrint = searchCuckooHash(ch, rootAVL->key);
-        fprintf(stdout, "%i,%s,%i\n",dataToPrint->data->key, dataToPrint->tableId, dataToPrint->data->hash);
+        fprintf(stdout, "%i,%s,%i\n", dataToPrint->data->key, dataToPrint->tableId, dataToPrint->data->hash);
         printCuckooHashTables(ch, rootAVL->right);
     }
 }

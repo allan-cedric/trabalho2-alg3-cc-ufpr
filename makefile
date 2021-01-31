@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-ansi -Wall -lm
+CFLAGS=-ansi -Wall -lm -std=c99
 OBJ=avl.o table.o myht.o
 EXEC=myht
 
