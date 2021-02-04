@@ -16,51 +16,54 @@
 /* Macros */
 #define MAX_SIZE_HASH_TABLE 11
 
-/* Estrutura de uma célula de dados da tabela Hash */
+/* Estrutura de uma célula de dados da tabela Hash. */
 typedef struct data_t
 {
     int key, hash;
 } data_t;
 
-/* Estrutura de indexação da tabela Hash */
+/* Estrutura de indexação (slot) da tabela Hash. */
 typedef struct index_t
 {
     data_t *data;
     char state, *tableId;
 } index_t;
 
-/* Estrutura para duas tabelas Hash*/
+/* Estrutura que administra duas tabelas Hash. */
 typedef struct cuckooHash_t
 {
     index_t *table_1, *table_2;
     int size_1, size_2;
 } CUCKOO_HASH;
 
-/* Função hash (1) */
+/* Função hash (1). */
 int hash_1(int key);
 
-/* Função hash (2) */
+/* Função hash (2). */
 int hash_2(int key);
 
-/* Cria uma nova tabela Hash */
+/* Cria uma nova tabela Hash. */
 index_t *newTable(int size, char *id);
 
-/* Inicializa uma tabela Hash com um certo tamanho. */
-void initCuckooHash(CUCKOO_HASH *ch);
+/* Inicializa as duas tabelas Hash com um certo tamanho. */
+void initCuckooHash(CUCKOO_HASH *ch, int size);
 
-/* Destrói uma tabela Hash */
+/* Destrói uma tabela Hash. */
 index_t *destroyTable(index_t *table, int size);
 
-/* Destrói as tabelas Hash. */
+/* Destrói as duas tabelas Hash. */
 void destroyCuckooHash(CUCKOO_HASH *ch);
 
-/* Cria uma nova célula de dados com uma chave */
+/* Cria uma nova célula de dados com uma chave. */
 data_t *newKey(int key, int hash);
 
-/* Insere uma chave na tabela Hash. */
+/* Inserção de uma chave em alguma das duas tabelas Hash. */
 void insertCuckooHash(CUCKOO_HASH *ch, int key);
 
-/* Busca uma certa chave nas tabelas Hash. Retorna uma célula da tabela Hash. */
+/* 
+    Busca uma certa chave nas tabelas Hash. 
+    Se encontrar, retorna um slot da tabela Hash onde se encontra essa certa chave, senão NULL. 
+*/
 index_t *searchCuckooHash(CUCKOO_HASH *ch, int key);
 
 /* Remove uma certa chave que pode estar nas tabelas Hash */

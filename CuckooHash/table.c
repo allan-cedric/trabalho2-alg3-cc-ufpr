@@ -34,9 +34,9 @@ index_t *newTable(int size, char *id)
     return table;
 }
 
-void initCuckooHash(CUCKOO_HASH *ch)
+void initCuckooHash(CUCKOO_HASH *ch, int size)
 {
-    ch->size_1 = MAX_SIZE_HASH_TABLE;
+    ch->size_1 = size;
     ch->size_2 = ch->size_1;
 
     ch->table_1 = newTable(ch->size_1, "T1");
@@ -78,17 +78,17 @@ data_t *newKey(int key, int hash)
 
 void insertCuckooHash(CUCKOO_HASH *ch, int key)
 {
+    index_t *existingKey = searchCuckooHash(ch, key);
+    if(existingKey)
+        return;
+
     int index = hash_1(key);
     if (ch->table_1[index].data)
     {
         int currentKey = ch->table_1[index].data->key;
-
-        /* Não aceita chaves duplicadas */
-        if (currentKey == key)
-            return;
-
         int newIndex = hash_2(currentKey);
 
+        /* Libera a posição para alocar a nova chave */
         free(ch->table_1[index].data);
         ch->table_1[index].data = NULL;
 
@@ -105,7 +105,7 @@ index_t *searchCuckooHash(CUCKOO_HASH *ch, int key)
     int index = hash_1(key);
     if (ch->table_1[index].state == 'E')
         return NULL;
-    else if (ch->table_1[index].state == 'F' && ch->table_1[index].data->key == key)
+    else if (ch->table_1[index].data && ch->table_1[index].data->key == key)
         return &(ch->table_1[index]);
     else
     {

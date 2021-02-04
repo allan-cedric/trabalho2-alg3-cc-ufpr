@@ -11,9 +11,9 @@ int main()
 {
     /* Inicialização das duas tabelas Hash */
     CUCKOO_HASH cuckooHash;
-    initCuckooHash(&cuckooHash);
+    initCuckooHash(&cuckooHash, MAX_SIZE_HASH_TABLE);
 
-    /* Incialização de uma árvore AVL (Vai servir para o output dos dados das tabelas Hash) */
+    /* Inicialização de uma árvore AVL (Vai servir para o output dos dados das tabelas Hash) */
     AVL *rootAVL;
     rootAVL = createAVL();
 
