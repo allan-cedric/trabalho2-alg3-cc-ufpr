@@ -47,9 +47,10 @@ int main()
     /* Output esperado */
     printCuckooHashTables(&cuckooHash, rootAVL);
 
-    /* Destruição das duas tabelas Hash */
+    /* Destruição das duas tabelas Hash e da árvore AVL */
     destroyCuckooHash(&cuckooHash);
     rootAVL = destroyAVL(rootAVL);
+    
     return 0;
 }
 
