@@ -1,8 +1,10 @@
-/* 
+/*
+   ===
    Source file : 'table.c'
    Escrito por : Allan Cedric G. B. Alves da Silva
    Profile : Aluno de graduação do curso de Ciência da Computação (UFPR)
    GRR : 20190351
+   ===
 */
 
 #include "table.h"
@@ -17,12 +19,12 @@ int hash_2(int key)
     return (int)floor(MAX_SIZE_HASH_TABLE * (key * 0.9 - floor(key * 0.9)));
 }
 
-index_t *newTable(int size, char *id)
+hash_table_t *newTable(int size, char *id)
 {
-    index_t *table = (index_t *)malloc(sizeof(index_t) * size);
+    hash_table_t *table = (hash_table_t *)malloc(sizeof(hash_table_t) * size);
     if (!table)
     {
-        perror("Memory allocation error! - 'newTable()'");
+        perror("Memory allocation error!");
         exit(1);
     }
     while (size--)
@@ -34,7 +36,7 @@ index_t *newTable(int size, char *id)
     return table;
 }
 
-void initCuckooHash(CUCKOO_HASH *ch, int size)
+void initCuckooHash(cuckoo_hash_t *ch, int size)
 {
     ch->size_1 = size;
     ch->size_2 = ch->size_1;
@@ -43,11 +45,12 @@ void initCuckooHash(CUCKOO_HASH *ch, int size)
     ch->table_2 = newTable(ch->size_2, "T2");
 }
 
-index_t *destroyTable(index_t *table, int size)
+hash_table_t *destroyTable(hash_table_t *table, int size)
 {
     while (size--)
     {
-        free(table[size].data);
+        if (table[size].data)
+            free(table[size].data);
         table[size].data = NULL;
     }
     free(table);
@@ -55,7 +58,7 @@ index_t *destroyTable(index_t *table, int size)
     return table;
 }
 
-void destroyCuckooHash(CUCKOO_HASH *ch)
+void destroyCuckooHash(cuckoo_hash_t *ch)
 {
     if (ch->table_1)
         ch->table_1 = destroyTable(ch->table_1, ch->size_1);
@@ -68,7 +71,7 @@ data_t *newKey(int key, int hash)
     data_t *newData = (data_t *)malloc(sizeof(data_t));
     if (!newData)
     {
-        perror("Memory allocation error! - 'newKey()'");
+        perror("Memory allocation error!");
         exit(1);
     }
     newData->key = key;
@@ -76,23 +79,24 @@ data_t *newKey(int key, int hash)
     return newData;
 }
 
-void insertCuckooHash(CUCKOO_HASH *ch, int key)
+void insertCuckooHash(cuckoo_hash_t *ch, int key)
 {
-    index_t *existingKey = searchCuckooHash(ch, key);
-    if(existingKey)
+    hash_table_t *existingKey = searchCuckooHash(ch, key);
+    if (existingKey)
         return;
 
     int index = hash_1(key);
     if (ch->table_1[index].data)
     {
+        /* === Salva a chave que houve a colisão === */
         int currentKey = ch->table_1[index].data->key;
         int newIndex = hash_2(currentKey);
 
-        /* Libera a posição para alocar a nova chave */
+        /* === Libera a posição para alocar a nova chave === */
         free(ch->table_1[index].data);
         ch->table_1[index].data = NULL;
 
-        /* Não há colisão na segunda tabela Hash */
+        /* === Não há colisão na segunda tabela Hash === */
         ch->table_2[newIndex].data = newKey(currentKey, newIndex);
         ch->table_2[newIndex].state = 'F';
     }
@@ -100,7 +104,7 @@ void insertCuckooHash(CUCKOO_HASH *ch, int key)
     ch->table_1[index].state = 'F';
 }
 
-index_t *searchCuckooHash(CUCKOO_HASH *ch, int key)
+hash_table_t *searchCuckooHash(cuckoo_hash_t *ch, int key)
 {
     int index = hash_1(key);
     if (ch->table_1[index].state == 'E')
@@ -116,9 +120,9 @@ index_t *searchCuckooHash(CUCKOO_HASH *ch, int key)
     }
 }
 
-void removeCuckooHash(CUCKOO_HASH *ch, int key)
+void removeCuckooHash(cuckoo_hash_t *ch, int key)
 {
-    index_t *keyToRemove = searchCuckooHash(ch, key);
+    hash_table_t *keyToRemove = searchCuckooHash(ch, key);
     if (keyToRemove)
     {
         free(keyToRemove->data);
