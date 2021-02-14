@@ -1,24 +1,19 @@
 CC=gcc
-CFLAGS=-ansi -Wall -lm -std=c99
-OBJ=avl.o table.o myht.o
+CFLAGS=-ansi -Wall -Wextra -g
+LDLIBS=-lm
+OBJS=ArvoreAVL/avl.o CuckooHash/table.o myht.o
 EXEC=myht
 
 all: myht clean
 
-myht: $(OBJ)
-	$(CC) $(OBJ) -o $(EXEC) $(CFLAGS)
+myht: $(OBJS)
 
-avl.o: ArvoreAVL/avl.h ArvoreAVL/avl.c
-	$(CC) -c ArvoreAVL/avl.c $(CFLAGS)
-
-table.o: CuckooHash/table.h CuckooHash/table.c
-	$(CC) -c CuckooHash/table.c $(CFLAGS)
-
-myht.o: ArvoreAVL/avl.h ArvoreAVL/avl.c CuckooHash/table.h CuckooHash/table.c
-	$(CC) -c myht.c $(CFLAGS)
+ArvoreAVL/avl.o: ArvoreAVL/avl.h ArvoreAVL/avl.c
+CuckooHash/table.o: CuckooHash/table.h CuckooHash/table.c
+myht.o: ArvoreAVL/avl.h CuckooHash/table.h myht.c
 
 clean:
-	-rm -f $(OBJ) *~
+	-rm -f $(OBJS) *~
 
 purge: clean
 	-rm -f $(EXEC)

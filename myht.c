@@ -27,7 +27,8 @@ int main()
         if (ret < 2 || (opInput != 'i' && opInput != 'r'))
         {
             perror("Error: Invalid input");
-            for (int i = 0; i < 2 - ret; i++)
+            int i;
+            for (i = 0; i < 2 - ret; i++)
                 fgetc(stdin);
         }
         else if (opInput == 'i')
