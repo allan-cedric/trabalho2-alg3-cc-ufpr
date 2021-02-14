@@ -9,5 +9,5 @@
         
     - E um 'makefile'
   
-### Objetivo :
+### Objetivo:
     - Demonstrar o funcionamento de inserções e remoções em uma tabela Hash (variante CuckooHash).
