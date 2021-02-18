@@ -5,7 +5,7 @@
         
     - Source file do trabalho: myht.c
 
-    - Documentação feita em LaTeX: documentationCuckooHash.pdf (Em breve)
+    - Documentação feita em LaTeX: documentationCuckooHashing.pdf
         
     - E um 'makefile'
   
