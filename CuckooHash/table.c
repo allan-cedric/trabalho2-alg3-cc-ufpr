@@ -97,8 +97,11 @@ void insertCuckooHash(cuckoo_hash_t *ch, int key)
         ch->table_1[index].data = NULL;
 
         /* === Não há colisão na segunda tabela Hash === */
-        ch->table_2[newIndex].data = newKey(currentKey, newIndex);
-        ch->table_2[newIndex].state = 'F';
+        if(!ch->table_2[newIndex].data)
+        {
+            ch->table_2[newIndex].data = newKey(currentKey, newIndex);
+            ch->table_2[newIndex].state = 'F';
+        }
     }
     ch->table_1[index].data = newKey(key, index);
     ch->table_1[index].state = 'F';
